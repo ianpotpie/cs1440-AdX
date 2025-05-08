@@ -1,18 +1,21 @@
-from typing import Set, List, Dict, Iterable, Callable
 import itertools
 from abc import ABC, abstractmethod
-from adx.structures import Campaign, Bid
-from math import isfinite, atan
+from math import atan, isfinite
+from typing import Callable, Dict, Iterable, List, Set
+
+from adx.structures import Bid, Campaign
+
 
 class NDaysNCampaignsAgent(ABC):
     _uid_generator = itertools.count(1)
 
     uid: int
+
     def __init__(self):
         self.current_game = 0
         self.init()
         self.uid = next(type(self)._uid_generator)
-        
+
     def init(self):
         self.current_day = 0
         self.quality_score = 1.0
@@ -22,7 +25,7 @@ class NDaysNCampaignsAgent(ABC):
 
     def __hash__(self):
         return hash(self.__class__.__name__ + str(self.uid))
-    
+
     def get_quality_score(self) -> float:
         return self.quality_score
 
@@ -33,21 +36,27 @@ class NDaysNCampaignsAgent(ABC):
         return self.current_game
 
     def get_active_campaigns(self) -> Set[Campaign]:
-        filtered = [c for c in self.my_campaigns if self.current_day >= c.start_day  and self.current_day <= c.end_day]
+        filtered = [
+            c
+            for c in self.my_campaigns
+            if self.current_day >= c.start_day and self.current_day <= c.end_day
+        ]
         return set(filtered)
 
     def get_cumulative_reach(self, campaign: Campaign) -> int:
         return campaign.cumulative_reach
 
     def get_cumulative_cost(self, campaign: Campaign) -> float:
-         return campaign.cumulative_cost
+        return campaign.cumulative_cost
 
     def get_cumulative_profit(self) -> float:
         return self.profit
 
     @staticmethod
     def effective_reach(x: int, R: int) -> float:
-        return (2.0 / 4.08577) * (atan(4.08577 * ((x + 0.0) / R) - 3.08577) - atan(-3.08577))
+        return (2.0 / 4.08577) * (
+            atan(4.08577 * ((x + 0.0) / R) - 3.08577) - atan(-3.08577)
+        )
 
     @staticmethod
     def is_valid_campaign_bid(campaign: Campaign, bid: float) -> bool:
@@ -65,7 +74,9 @@ class NDaysNCampaignsAgent(ABC):
         pass
 
     @abstractmethod
-    def get_campaign_bids(self, campaigns_for_auction: Set[Campaign]) -> Dict[Campaign, float]:
+    def get_campaign_bids(
+        self, campaigns_for_auction: Set[Campaign]
+    ) -> Dict[Campaign, float]:
         pass
 
     @abstractmethod
