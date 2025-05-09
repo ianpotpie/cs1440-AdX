@@ -1,15 +1,4 @@
-import itertools
-from typing import Dict, Set
-
-import numpy as np
-from agt_server.agents.base_agents.adx_agent import NDaysNCampaignsAgent
 from agt_server.agents.test_agents.adx.tier1.my_agent import Tier1NDaysNCampaignsAgent
-from agt_server.agents.utils.adx.structures import (
-    Bid,
-    BidBundle,
-    Campaign,
-    MarketSegment,
-)
 from agt_server.local_games.adx_arena import AdXGameSimulator
 
 from agent_submission import MyNDaysNCampaignsAgent
